@@ -49,8 +49,9 @@ class UserRepository {
 }
 
 void main() {
-  // UserRepository().join("test02", "admin2@admin.com", "1234");
-  // UserRepository().login("test02", "1234");
-  UserRepository().autoLogin(
-      "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpbWdVcmwiOiIvaW1hZ2VzLzEucG5nIiwic3ViIjoibWV0YWNvZGluZyIsImlkIjo1LCJleHAiOjE3NTU3NTY3MjUsInVzZXJuYW1lIjoidGVzdDAyIn0.Bx_kqISvYJW1B2GpInH7x_lKyjd37qcjL6CpwbAunNnShnKuKsgAcdyn0GpCqFIdDFASgBvu1r6RNjSMQfngMQ");
+  String t =
+      "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpbWdVcmwiOiIvaW1hZ2VzLzEucG5nIiwic3ViIjoibWV0YWNvZGluZyIsImlkIjo3LCJleHAiOjE3NTU3NjAxODEsInVzZXJuYW1lIjoidGVzdDA0In0.HulBArhMZXVqnANm-PCZ7iGQumBo7sCvlLEvo5l2g1twmZVcJD10R0XDe21WKZAUaGUAWnKCNNybVyjt4VkD_w";
+  //UserRepository().join("test04", "admin2@admin.com", "1234");
+  //UserRepository().login("test04", "1234");
+  UserRepository().autoLogin(t);
 }

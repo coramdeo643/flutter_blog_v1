@@ -71,11 +71,11 @@ class PostRepository {
 
 void main() {
   String t =
-      "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpbWdVcmwiOiIvaW1hZ2VzLzEucG5nIiwic3ViIjoibWV0YWNvZGluZyIsImlkIjo1LCJleHAiOjE3NTU3NTg4ODksInVzZXJuYW1lIjoidGVzdDAyIn0.2bDTgJirrHG41fD0e7ptIZcLFcvqYdJI2GgSlwwFTO-hhONUsVCEK7LclbeOlSUGUuC4QxtKzIhQsKOoabnpVA";
+      "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpbWdVcmwiOiIvaW1hZ2VzLzEucG5nIiwic3ViIjoibWV0YWNvZGluZyIsImlkIjo3LCJleHAiOjE3NTU3NjAxODEsInVzZXJuYW1lIjoidGVzdDA0In0.HulBArhMZXVqnANm-PCZ7iGQumBo7sCvlLEvo5l2g1twmZVcJD10R0XDe21WKZAUaGUAWnKCNNybVyjt4VkD_w";
   //UserRepository().login("test02", "1234");
-  //PostRepository().post("title123", "content123", t);
+  //PostRepository().post("title1234", "content1234", t);
   //PostRepository().findAll(t);
-  //PostRepository().findById(10, t);
-  //PostRepository().deleteById(24, t); // 삭제 권한 없음?
-  PostRepository().updateById("title777", "content777", 25, t);
+  //PostRepository().findById(28, t);
+  //PostRepository().deleteById(27, t);
+  PostRepository().updateById("title777", "content777", 26, t);
 }
