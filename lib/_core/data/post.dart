@@ -8,7 +8,7 @@ class Post {
   DateTime createdAt;
   DateTime updatedAt;
   int bookmarkCount;
-  bool? isBookmark;
+  bool? isBookmark; // 현재 사용자의 북마크 여부?(로그인 상태에 따라 달라진다)
   User user;
   Replies replies;
   //int? status;

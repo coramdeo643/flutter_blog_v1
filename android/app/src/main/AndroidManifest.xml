@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    http 통신 허용 기술 명시 -->
     <application
         android:label="flutter_blog_2"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
+        >
         <activity
             android:name=".MainActivity"
             android:exported="true"
