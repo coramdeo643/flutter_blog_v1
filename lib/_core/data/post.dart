@@ -1,0 +1,45 @@
+import 'replies.dart';
+import 'user.dart';
+
+class Post {
+  int id; // Post ID
+  String title;
+  String content;
+  DateTime createdAt;
+  DateTime updatedAt;
+  int bookmarkCount;
+  bool? isBookmark;
+  User user;
+  Replies replies;
+  //int? status;
+  //String? errorMessage;
+
+  Post({
+    required this.id,
+    required this.title,
+    required this.content,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.bookmarkCount,
+    required this.user,
+    required this.replies,
+    this.isBookmark,
+  });
+
+  Post.fromMap(Map<String, dynamic> data)
+      : id = data['id'],
+        title = data['title'],
+        content = data['content'],
+        createdAt = DateTime.parse(data['createdAt']),
+        updatedAt = DateTime.parse(data['updatedAt']),
+        bookmarkCount = data['bookmarkCount'],
+        user = User.fromMap(data['user']),
+        replies = data['replies'],
+        isBookmark = data['isBookmark'];
+
+  @override
+  String toString() {
+    return 'Post{id: $id, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, '
+        'bookmarkCount: $bookmarkCount, user: $user, replies: $replies, isBookmark: $isBookmark}';
+  }
+}
