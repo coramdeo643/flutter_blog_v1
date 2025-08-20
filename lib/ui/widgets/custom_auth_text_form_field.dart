@@ -2,25 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blog/_core/constants/size.dart';
 
 class CustomAuthTextFormField extends StatelessWidget {
-  final String text;
+  final String title; // label title
+  final String errorText; // error msg when input is wrong
+  final Function(String)? onChanged; // when input has changed
   final bool obscureText;
 
-  const CustomAuthTextFormField({
-    required this.text,
+  CustomAuthTextFormField({
+    required this.title,
+    this.errorText = "",
+    this.onChanged,
     this.obscureText = false,
-  });
+  }); // passwords hide or not
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(text),
+        Text(title),
         const SizedBox(height: smallGap),
         TextFormField(
           obscureText: obscureText,
           decoration: InputDecoration(
-            hintText: "Enter $text",
+            hintText: "Enter $title",
             enabledBorder: OutlineInputBorder(
               // 3. 기본 TextFormField 디자인
               borderRadius: BorderRadius.circular(20),
