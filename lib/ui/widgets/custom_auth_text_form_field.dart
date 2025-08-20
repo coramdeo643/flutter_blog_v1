@@ -22,8 +22,10 @@ class CustomAuthTextFormField extends StatelessWidget {
         Text(title),
         const SizedBox(height: smallGap),
         TextFormField(
+          onChanged: onChanged,
           obscureText: obscureText,
           decoration: InputDecoration(
+            errorText: errorText.isEmpty ? null : errorText,
             hintText: "Enter $title",
             enabledBorder: OutlineInputBorder(
               // 3. 기본 TextFormField 디자인
