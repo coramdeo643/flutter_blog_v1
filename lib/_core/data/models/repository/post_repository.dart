@@ -1,81 +1,79 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_blog/_core/data/post.dart';
+import 'package:flutter_blog/_core/data/replies.dart';
+import 'package:flutter_blog/_core/data/user.dart';
 import 'package:logger/logger.dart';
 import '../../../utils/my_http.dart';
 import 'user_repository.dart';
 import 'package:flutter/material.dart';
 
-class PostRepository {
-  String auth = "Authorization";
+void main() {
+  //UserRepository().login("ssar", "1234");
+  final _accessToken =
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpbWdVcmwiOiIvaW1hZ2VzLzEucG5nIiwic3ViIjoibWV0YWNvZGluZyIsImlkIjoxLCJleHAiOjE3NTU4MjIwMzUsInVzZXJuYW1lIjoic3NhciJ9.HxKgzGfZRNpvXn0f0B5-3Wo9dv5Kg72xvr61Hqi4wYxpxlRCQX5Fk7ZKGJ5zuA-Ic-SndjM-9R2spBQ2_Fje6Q";
+  dio.options.headers['Authorization'] = 'Bearer $_accessToken';
+  Post post = Post(
+    id: 1,
+    title: "updated title",
+    content: "updated content",
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+    bookmarkCount: 1,
+    user: User(),
+    replies: Replies(),
+  );
+  //PostRepository().write("title999", "content999");
+  //PostRepository().getList(page: 2);
+  //PostRepository().getOne(11);
+  //PostRepository().deleteOne(24);
+  PostRepository().updateOne(post);
+}
 
+class PostRepository {
   // Post Write Request
-  Future<Map<String, dynamic>> post(
-      String title, String content, String accessToken) async {
-    final requestBody = {
+  Future<Map<String, dynamic>> write(String title, String content) async {
+    Response response = await dio.post("/api/post", data: {
       "title": title,
       "content": content,
-    };
-    Response response = await dio.post(
-      "/api/post",
-      data: requestBody,
-      options: Options(headers: {"Authorization": accessToken}),
-    );
+    });
     final responseBody = response.data;
     Logger().d(responseBody);
-    return requestBody;
+    return responseBody;
   }
 
-  // Post List Request
-  Future<Map<String, dynamic>> findAll(String accessToken) async {
-    Response response = await dio.get(
-      "/api/post?page=0",
-      options: Options(headers: {"Authorization": accessToken}),
-    );
+  // Post List Request(Pagination)
+  Future<Map<String, dynamic>> getList({int page = 0}) async {
+    Response response =
+        await dio.get("/api/post", queryParameters: {"page": page});
     final responseBody = response.data;
     Logger().d(responseBody);
     return responseBody;
   }
 
   // Post Detail Request
-  Future<Map<String, dynamic>> findById(int id, String accessToken) async {
-    Response response = await dio.get("/api/post/$id",
-        options: Options(headers: {auth: accessToken}));
-    final rBody = response.data;
-    Logger().d(rBody);
-    return rBody;
+  Future<Map<String, dynamic>> getOne(int postId) async {
+    Response response = await dio.get("/api/post/$postId");
+    final responseBody = response.data;
+    Logger().d(responseBody);
+    return responseBody;
   }
 
   // Post Delete Request
-  Future<Map<String, dynamic>> deleteById(int id, String accessToken) async {
-    Response response = await dio.delete("/api/post/$id",
-        options: Options(headers: {auth: accessToken}));
-    final rBody = response.data;
-    Logger().d(rBody);
-    return rBody;
+  Future<Map<String, dynamic>> deleteOne(int postId) async {
+    Response response = await dio.delete("/api/post/$postId");
+    final responseBody = response.data;
+    Logger().d(responseBody);
+    return responseBody;
   }
 
   // Post Update Request
-  Future<Map<String, dynamic>> updateById(
-      String title, String content, int id, String accessToken) async {
-    final requestBody = {"title": title, "content": content};
-    Response response = await dio.put(
-      "/api/post/$id",
-      data: requestBody,
-      options: Options(headers: {auth: accessToken}),
-    );
-    final rBody = response.data;
-    Logger().d(rBody);
-    return rBody;
+  Future<Map<String, dynamic>> updateOne(Post post) async {
+    Response response = await dio.put("/api/post/${post.id}", data: {
+      "title": post.title,
+      "content": post.content,
+    });
+    final responseBody = response.data;
+    Logger().d(responseBody);
+    return responseBody;
   }
-}
-
-void main() {
-  String t =
-      "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpbWdVcmwiOiIvaW1hZ2VzLzEucG5nIiwic3ViIjoibWV0YWNvZGluZyIsImlkIjo3LCJleHAiOjE3NTU3NjAxODEsInVzZXJuYW1lIjoidGVzdDA0In0.HulBArhMZXVqnANm-PCZ7iGQumBo7sCvlLEvo5l2g1twmZVcJD10R0XDe21WKZAUaGUAWnKCNNybVyjt4VkD_w";
-  //UserRepository().login("test02", "1234");
-  //PostRepository().post("title1234", "content1234", t);
-  //PostRepository().findAll(t);
-  //PostRepository().findById(28, t);
-  //PostRepository().deleteById(27, t);
-  PostRepository().updateById("title777", "content777", 26, t);
 }
