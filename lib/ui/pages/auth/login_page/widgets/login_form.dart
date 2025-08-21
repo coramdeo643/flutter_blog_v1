@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/providers/form/login_form_notifier.dart';
+import 'package:flutter_blog/providers/global/session_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../_core/constants/size.dart';
@@ -42,7 +43,11 @@ class LoginForm extends ConsumerWidget {
             click: () {
               bool isValid = loginFormNotifier.validate();
               if (isValid) {
-                Navigator.popAndPushNamed(context, "/post/list");
+                // Navigator.popAndPushNamed(context, "/post/list");
+                // Request to SessionProvider to login under Global Management!!!
+                ref
+                    .read(sessionProvider.notifier)
+                    .login(loginModel.username, loginModel.password);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("유효성 검사 실패입니다")),

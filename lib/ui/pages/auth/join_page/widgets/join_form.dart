@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/providers/form/join_form_notifier.dart';
+import 'package:flutter_blog/providers/global/session_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../_core/constants/size.dart';
@@ -55,8 +56,11 @@ class JoinForm extends ConsumerWidget {
             //
             bool isValid = formNotifier.validate();
             if (isValid) {
-              /// 테스트 용
-              // UserRepository().join(joinModel.username, joinModel.email, joinModel.password);
+              ref.read(sessionProvider.notifier).join(
+                    joinModel.username,
+                    joinModel.email,
+                    joinModel.password,
+                  );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("유효성 검사 실패입니다")),
