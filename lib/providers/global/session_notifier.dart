@@ -68,10 +68,46 @@ class SessionNotifier extends Notifier<SessionModel> {
       };
     }
   }
+
   // =========================
   // Logout
+  Future<void> logout() async {
+    try {
+      await secureStorage.delete(key: "accessToken");
+      state = SessionModel();
+      dio.options.headers["Authorization"] = "";
+      Logger().d("Logout Success");
+    } catch (e) {
+      Logger().d("!!!Error to Logout!!!");
+      state = SessionModel();
+      dio.options.headers["Authorization"] = "";
+    }
+  }
 
   // Auto Login
+  Future<bool> autoLogin() async {
+    try {
+      // Step.1 Token Check from SecureStorage
+      String? accessToken = await secureStorage.read(key: "accessToken");
+      if (accessToken == null) {
+        return false;
+      }
+      // Step.2 Request to AutoLogin to UserRepository
+      Map<String, dynamic> body = await UserRepository().autoLogin(accessToken);
+      // Step.3 서버에서 받은 사용자 정보를 창고에 다시 넣어야한다
+      User user = User.fromMap(body["response"]);
+      user.accessToken = accessToken;
+      // Step.4 창고 데이터에 로그인된 상태로 업데이트 처리
+      state = SessionModel(user: user, isLogin: true);
+      // STrp.5 이 후 모든 HTTP 요청에 인증 열쇠 자동 부여하기
+      dio.options.headers["Authorization"] = user.accessToken;
+      Logger().d("Auto Login Success");
+      return true;
+    } catch (e) {
+      Logger().d("Fail to Auto Login !!! : $e");
+      return false;
+    }
+  }
 
   // Join
   Future<Map<String, dynamic>> join(
