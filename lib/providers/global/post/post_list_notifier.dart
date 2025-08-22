@@ -81,9 +81,36 @@ class PostListNotifier extends Notifier<PostListModel?> {
       return {"success": false};
     }
   }
+
 // 2. RefreshPostList : 목록 새로고침 로직
+  Future<Map<String, dynamic>> refreshPosts() async {
+    Map<String, dynamic> body = await PostRepository().getList(page: 0);
+    if (body["success"]) {
+      PostListModel postListModel = PostListModel.fromMap(body["response"]);
+      state = postListModel;
+      return {"success": true};
+    } else {
+      ExceptionHandler.handleException(
+          body["errorMessage"], StackTrace.current);
+      return {"success": false};
+    }
+  }
 
 // 3. loadMorePosts : 페이지 처리, 추가 데이터 요청
+  Future<Map<String, dynamic>> loadMorePosts() async {
+    int nextPage = state!.pageNumber + 1;
+    Map<String, dynamic> body = await PostRepository().getList(page: nextPage);
+    if (body["success"]) {
+      PostListModel newPostListModel = PostListModel.fromMap(body["response"]);
+      List<Post> newPosts = [...state!.posts, ...newPostListModel.posts];
+      state = newPostListModel.copyWith(posts: newPosts);
+      return {"success": true};
+    } else {
+      ExceptionHandler.handleException(
+          body["errorMessage"], StackTrace.current);
+      return {"success": false};
+    }
+  }
 }
 
 final postListProvider = NotifierProvider<PostListNotifier, PostListModel?>(

@@ -19,40 +19,73 @@ class PostListBody extends ConsumerStatefulWidget {
 class _PostListBodyState extends ConsumerState<PostListBody> {
   // ScrollController : 스크롤 위치 감시, 메모리 해제가 필요하다
   final ScrollController _scrollController = ScrollController();
+  bool _isLoading = false;
 
   @override
   void initState() {
     // Provider 초기화
     super.initState();
+    _scrollController.addListener(() {
+      _onScroll();
+    });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 10) {
+      if (_isLoading == false) {
+        _loadMorePosts();
+      }
+    }
+  }
+
+  Future<void> _loadMorePosts() async {
+    PostListModel? model = ref.read(postListProvider);
+    if (model == null || model.isLast) {
+      return;
+    }
+    try {
+      _isLoading = true;
+      await ref.read(postListProvider.notifier).loadMorePosts();
+    } finally {
+      _isLoading = false;
+    }
   }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     // Memory leak 방지
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    ScrollController scrollController = ScrollController();
     PostListModel? postListModel = ref.watch(postListProvider);
     if (postListModel == null) {
       return const Center(child: CircularProgressIndicator());
     } else {
-      return ListView.separated(
-        itemCount: postListModel.posts.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => PostDetailPage()));
-            },
-            child: PostListItem(postListModel.posts[index]),
-          );
+      return RefreshIndicator(
+        onRefresh: () async {
+          print("refresh");
+          await ref.read(postListProvider.notifier).refreshPosts();
         },
-        separatorBuilder: (context, index) {
-          return const Divider();
-        },
+        child: ListView.separated(
+          controller: _scrollController,
+          itemCount: postListModel.posts.length,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => PostDetailPage()));
+              },
+              child: PostListItem(postListModel.posts[index]),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const Divider();
+          },
+        ),
       );
     }
   }
