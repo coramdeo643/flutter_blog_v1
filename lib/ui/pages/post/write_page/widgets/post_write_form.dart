@@ -46,8 +46,8 @@ class PostWriteForm extends ConsumerWidget {
                   SnackBar(content: Text("Fail to write post")),
                 );
               } else {
-                Navigator.pushReplacementNamed(context, "/post/list");
                 ref.read(postListProvider.notifier).refreshPosts();
+                Navigator.pushReplacementNamed(context, "/post/list");
               }
             },
           ),

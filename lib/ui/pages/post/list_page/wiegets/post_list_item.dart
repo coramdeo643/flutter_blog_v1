@@ -19,7 +19,7 @@ class PostListItem extends StatelessWidget {
       ),
       trailing: ClipRRect(
         borderRadius: BorderRadius.circular(50), // 네모난 이미지를 동그랗게 만들기 위한 값 설정
-        child: Image.network("${baseUrl} ${post.user.imgUrl}"), // 네모난 이미지
+        child: Image.network("http://picsum.photos/id/64/50/50"), // 네모난 이미지
       ),
     );
   }
