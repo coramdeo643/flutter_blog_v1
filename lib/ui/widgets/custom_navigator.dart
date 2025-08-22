@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/_core/constants/size.dart';
+import 'package:flutter_blog/providers/global/session_notifier.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomNavigation extends StatelessWidget {
+// 창고에 접근할 수 있는 위젯으로 확장해야 한다.
+class CustomNavigation extends ConsumerWidget {
   final scaffoldKey;
   const CustomNavigation(this.scaffoldKey, {Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    SessionNotifier sessionNotifier = ref.read(sessionProvider.notifier);
     return Container(
       width: getDrawerWidth(context),
       height: double.infinity,
@@ -23,7 +27,7 @@ class CustomNavigation extends StatelessWidget {
                   Navigator.pushNamed(context, "/post/write");
                 },
                 child: const Text(
-                  "글쓰기",
+                  "Post",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -33,12 +37,30 @@ class CustomNavigation extends StatelessWidget {
               ),
               const Divider(),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
+                  // logout function call
+                  await sessionNotifier.logout();
                   scaffoldKey.currentState!.openEndDrawer();
                   Navigator.popAndPushNamed(context, "/login");
                 },
                 child: const Text(
-                  "로그아웃",
+                  "Logout",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black54,
+                  ),
+                ),
+              ),
+              const Divider(),
+              TextButton(
+                onPressed: () async {
+                  //await sessionNotifier.logout();
+                  scaffoldKey.currentState!.openEndDrawer();
+                  //Navigator.popAndPushNamed(context, "/login");
+                },
+                child: const Text(
+                  "My Page",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

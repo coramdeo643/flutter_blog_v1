@@ -3,7 +3,10 @@ import 'package:flutter_blog/ui/pages/post/list_page/wiegets/post_list_body.dart
 import 'package:flutter_blog/ui/widgets/custom_navigator.dart';
 
 class PostListPage extends StatelessWidget {
+  // 보통 하위 위젯에게 키를 전달해준다~
+  // scaffoldKey : drawer widget control
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  // refreshKey : refresh indicator widget control
   final refreshKey = GlobalKey<RefreshIndicatorState>();
 
   PostListPage({Key? key}) : super(key: key);
@@ -18,8 +21,7 @@ class PostListPage extends StatelessWidget {
       ),
       body: RefreshIndicator(
         key: refreshKey,
-        onRefresh: () async {
-        },
+        onRefresh: () async {},
         child: PostListBody(),
       ),
     );

@@ -10,7 +10,7 @@ class Post {
   int bookmarkCount;
   bool? isBookmark; // 현재 사용자의 북마크 여부?(로그인 상태에 따라 달라진다)
   User user;
-  Replies replies;
+  //Replies replies;
   //int? status;
   //String? errorMessage;
 
@@ -22,7 +22,7 @@ class Post {
     required this.updatedAt,
     required this.bookmarkCount,
     required this.user,
-    required this.replies,
+    //required this.replies,
     this.isBookmark,
   });
 
@@ -34,12 +34,14 @@ class Post {
         updatedAt = DateTime.parse(data['updatedAt']),
         bookmarkCount = data['bookmarkCount'],
         user = User.fromMap(data['user']),
-        replies = data['replies'],
+        //  replies = data['replies'],
         isBookmark = data['isBookmark'];
 
   @override
   String toString() {
     return 'Post{id: $id, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, '
-        'bookmarkCount: $bookmarkCount, user: $user, replies: $replies, isBookmark: $isBookmark}';
+        'bookmarkCount: $bookmarkCount, user: $user, '
+        //'replies: $replies, '
+        'isBookmark: $isBookmark}';
   }
 }

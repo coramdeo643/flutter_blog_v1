@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../_core/data/post.dart';
+import '../../../../../_core/utils/my_http.dart';
+
 class PostListItem extends StatelessWidget {
-  const PostListItem({Key? key}) : super(key: key);
+  final Post post;
+  const PostListItem(this.post, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text("제목", style: TextStyle(fontWeight: FontWeight.bold)),
+      title: Text(post.title, style: TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(
-        "내용",
+        post.content,
         style: TextStyle(color: Colors.black45),
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),
       trailing: ClipRRect(
         borderRadius: BorderRadius.circular(50), // 네모난 이미지를 동그랗게 만들기 위한 값 설정
-        child: Image.asset('assets/default_profile.png'), // 네모난 이미지
+        child: Image.network("${baseUrl} ${post.user.imgUrl}"), // 네모난 이미지
       ),
     );
   }

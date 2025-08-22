@@ -20,7 +20,7 @@ void main() {
     updatedAt: DateTime.now(),
     bookmarkCount: 1,
     user: User(),
-    replies: Replies(),
+    //replies: Replies(),
   );
   //PostRepository().write("title999", "content999");
   //PostRepository().getList(page: 2);
