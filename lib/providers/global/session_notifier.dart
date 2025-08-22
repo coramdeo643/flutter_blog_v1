@@ -25,10 +25,121 @@ class SessionModel {
   }
 } // end of SessionModel
 
+// 문제점 고민해보기
+// 1. 책임 혼재 : UI로직, 비즈니스 로직, 검증 로직 중복되어있다
+// 2. 테스트 어려움 : UI와 비즈니스 로직이 동시에 존재해서 관리 어려움
+// 3. 재사용성 저하 : 다른 화면에서 로그인 기능 사용 어려움(책임혼재되어있기에)
+/*
+--->>> Refactoring!
+
+ */
+
+// 창고 메뉴얼
+class SessionNotifier extends Notifier<SessionModel> {
+  @override
+  SessionModel build() {
+    return SessionModel();
+  }
+
+  // Login Logic Design - Only for business logic
+  Future<Map<String, dynamic>> login(String username, String password) async {
+    try {
+      Map<String, dynamic> body =
+          await UserRepository().login(username, password);
+      if (body["success"] == false) {
+        return body;
+        // 서버에서 내려준 에러 정보를 그대로 반환 --> UI에서 에러 메시지 출력
+      }
+
+      User user = User.fromMap(body["response"]);
+
+      await secureStorage.write(key: "accessToken", value: user.accessToken);
+
+      state = SessionModel(user: user, isLogin: true);
+
+      dio.options.headers["Authorization"] = user.accessToken;
+
+      return {"success": true}; // 로그인 성공 정보 반환
+    } catch (e) {
+      // Network Error,
+      return {
+        "success": false,
+        "errorMessage": "Network Error",
+      };
+    }
+  }
+  // =========================
+  // Logout
+
+  // Auto Login
+
+  // Join
+  Future<Map<String, dynamic>> join(
+      String username, String email, String password) async {
+    try {
+      Logger().d("username : $username, email : $email, pwd : $password");
+      Map<String, dynamic> body =
+          await UserRepository().join(username, email, password);
+      if (!body["success"]) {
+        return {"success": false, "errorMessage": body["errorMessage"]};
+      } // Fail to Join
+      return {"success": true}; // Success to Join
+    } catch (e) {
+      // Network Error,
+      return {
+        "success": false,
+        "errorMessage": "Network Error",
+      };
+    }
+  }
+} // end of SessionNotifier
+
+// 실제 창고 개설
+final sessionProvider =
+    NotifierProvider<SessionNotifier, SessionModel>(() => SessionNotifier());
+
+//--------------------------------------------------------------------------
+/*
+// 세션이라는 데이터를 구조화 해보자
+// 창고 데이터 구상하기
+
+import 'package:flutter/material.dart'
+    show ScaffoldMessenger, SnackBar, Text, Navigator;
+import 'package:flutter_blog/_core/data/models/repository/user_repository.dart';
+import 'package:flutter_blog/_core/utils/my_http.dart';
+import 'package:flutter_blog/main.dart';
+import 'package:flutter_blog/providers/form/join_form_notifier.dart';
+import 'package:flutter_blog/providers/form/login_form_notifier.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
+
+import '../../_core/data/user.dart';
+
+class SessionModel {
+  User? user;
+  bool? isLogin;
+
+  SessionModel({this.user, this.isLogin = false});
+
+  @override
+  String toString() {
+    return 'SessionModel{user: $user, isLogin: $isLogin}';
+  }
+} // end of SessionModel
+
+// 문제점 고민해보기
+// 1. 책임 혼재 : UI로직, 비즈니스 로직, 검증 로직 중복되어있다
+// 2. 테스트 어려움 : UI와 비즈니스 로직이 동시에 존재해서 관리 어려움
+// 3. 재사용성 저하 : 다른 화면에서 로그인 기능 사용 어려움(책임혼재되어있기에)
+/*
+--->>> Refactoring!
+
+ */
+
 // 창고 메뉴얼
 class SessionNotifier extends Notifier<SessionModel> {
   // context가 없는 환경에서 navigation 과 알림 처리를 위한 Global key
-  final mContext = navigatorKey.currentContext!;
+  ///final mContext = navigatorKey.currentContext!;
 
   @override
   SessionModel build() {
@@ -36,24 +147,26 @@ class SessionNotifier extends Notifier<SessionModel> {
     return SessionModel();
   }
 
-  // Login Logic Design
+  // Login Logic Design - Only for business logic
   Future<void> login(String username, String password) async {
+    // 검증 중복 문제??? 굳이 여기서? 단일책임의원칙을 벗어남, 책임들이 혼재되어있음
     // 유효성 검증 Validation = 사용자가 입력한 username & password
-    bool isValid = ref.read(loginFormProvider.notifier).validate();
-    if (!isValid) {
-      ScaffoldMessenger.of(mContext)
-          .showSnackBar(SnackBar(content: Text(" - - - Not Valid - - - ")));
-      return;
-    }
+    ///bool isValid = ref.read(loginFormProvider.notifier).validate();
+    // if (!isValid) {
+    //   ScaffoldMessenger.of(mContext)
+    //       .showSnackBar(SnackBar(content: Text(" - - - Not Valid - - - ")));
+    //   return;
+    // }
+    //------------------------------------------------------------------------
     Map<String, dynamic> body =
         await UserRepository().login(username, password);
-    if (!body["success"]) {
+    // if (!body["success"]) {
       // if login fail
-      ScaffoldMessenger.of(mContext)
-          .showSnackBar(SnackBar(content: Text(" - - - Login Failed - - - ")));
-      return;
-    }
-    // else login success
+      // ScaffoldMessenger.of(mContext)
+      //     .showSnackBar(SnackBar(content: Text(" - - - Login Failed - - - ")));
+      // return;
+    // }
+    // // else login success
     // 서버에서 받은 사용자 정보를 앱에서 사용할 수 있는 형태로 변환
     User user = User.fromMap(body["response"]);
     // Local 저장소에 JWT 토큰을 저장해두자.
@@ -101,3 +214,5 @@ class SessionNotifier extends Notifier<SessionModel> {
 // 실제 창고 개설
 final sessionProvider =
     NotifierProvider<SessionNotifier, SessionModel>(() => SessionNotifier());
+
+ */

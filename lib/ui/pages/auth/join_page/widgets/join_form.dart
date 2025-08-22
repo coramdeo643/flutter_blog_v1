@@ -51,21 +51,43 @@ class JoinForm extends ConsumerWidget {
         ),
         const SizedBox(height: largeGap),
         CustomElevatedButton(
-          text: "회원가입",
-          click: () {
-            //
+          text: "Join",
+          click: () async {
             bool isValid = formNotifier.validate();
-            if (isValid) {
-              ref.read(sessionProvider.notifier).join(
-                    joinModel.username,
-                    joinModel.email,
-                    joinModel.password,
-                  );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("유효성 검사 실패입니다")),
-              );
+            if (isValid == false) {
+              _buildScaffold(context, "Fail to validate");
+              return;
             }
+            final Map<String, dynamic> result =
+                await ref.read(sessionProvider.notifier).join(
+                      joinModel.username,
+                      joinModel.email,
+                      joinModel.password,
+                    );
+            if (result["success"] == false) {
+              _buildScaffold(context, "${result["errorMessage"]}");
+            } else {
+              Navigator.pushNamed(context, "/login");
+            }
+
+            // bool isValid = formNotifier.validate();
+            // if (isValid) {
+            //   Map<String, dynamic> isSuccess =
+            //       await ref.read(sessionProvider.notifier).join(
+            //             joinModel.username,
+            //             joinModel.email,
+            //             joinModel.password,
+            //           );
+            //   _buildScaffold(context, "${isSuccess}");
+            //   // ScaffoldMessenger.of(context).showSnackBar(
+            //   //   SnackBar(content: Text("${isSuccess}")),
+            //   // );
+            // } else {
+            //   _buildScaffold(context, "Fail to validate");
+            //   // ScaffoldMessenger.of(context).showSnackBar(
+            //   //   SnackBar(content: Text("유효성 검사 실패입니다")),
+            //   // );
+            // }
           },
         ),
         CustomTextButton(
@@ -79,6 +101,10 @@ class JoinForm extends ConsumerWidget {
   }
 }
 
+_buildScaffold(BuildContext context, String msg) {
+  return ScaffoldMessenger.of(context)
+      .showSnackBar(SnackBar(content: Text(msg)));
+}
 //======================================================
 /*
 import 'package:flutter/material.dart';
