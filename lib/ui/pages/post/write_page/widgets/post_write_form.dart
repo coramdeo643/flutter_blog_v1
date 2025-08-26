@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/_core/constants/size.dart';
-import 'package:flutter_blog/_core/data/post.dart';
-import 'package:flutter_blog/_core/utils/validator_util.dart';
 import 'package:flutter_blog/providers/global/post/post_list_notifier.dart';
 import 'package:flutter_blog/providers/global/post/post_write_notifier.dart';
 import 'package:flutter_blog/ui/widgets/custom_elavated_button.dart';
@@ -35,7 +33,7 @@ class PostWriteForm extends ConsumerWidget {
           // Side Effect 1 : Snackbar success MSG
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text("Post Write Success!"),
-            backgroundColor: Colors.green.shade100,
+            backgroundColor: Colors.green,
           ));
           // Side Effect 2 : Post List Refresh(가능한 notifier 끼리 통신의 자제하자)
           ref.read(postListProvider.notifier).refreshAfterWriter();
@@ -45,7 +43,7 @@ class PostWriteForm extends ConsumerWidget {
           // Side Effect 1 : Snackbar failure MSG
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text("Post Write Failed!"),
-            backgroundColor: Colors.red.shade100,
+            backgroundColor: Colors.red,
           ));
         }
       },

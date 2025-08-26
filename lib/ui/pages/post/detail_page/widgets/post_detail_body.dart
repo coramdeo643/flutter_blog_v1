@@ -6,7 +6,8 @@ import 'package:flutter_blog/ui/pages/post/detail_page/widgets/post_detail_profi
 import 'package:flutter_blog/ui/pages/post/detail_page/widgets/post_detail_title.dart';
 
 class PostDetailBody extends StatelessWidget {
-  const PostDetailBody({Key? key}) : super(key: key);
+  final int postId;
+  const PostDetailBody(this.postId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

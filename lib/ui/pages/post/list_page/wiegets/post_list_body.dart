@@ -76,8 +76,13 @@ class _PostListBodyState extends ConsumerState<PostListBody> {
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => PostDetailPage()));
+                // TODO 코드 수정
+                // 해당 하는 게시글에 PK값을 전달해야 해당 정보를 불러올수 있다
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            PostDetailPage(postListModel.posts[index].id)));
               },
               child: PostListItem(postListModel.posts[index]),
             );
