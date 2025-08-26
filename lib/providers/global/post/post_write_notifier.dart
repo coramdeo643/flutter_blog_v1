@@ -1,5 +1,8 @@
 // 게시글 작성 진행 상태를 나타내는 열거형
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_blog/_core/data/models/repository/post_repository.dart';
+import 'package:flutter_blog/main.dart';
+import 'package:flutter_blog/providers/global/post/post_list_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../_core/data/post.dart';
@@ -55,21 +58,21 @@ class PostWriteNotifier extends Notifier<PostWriteModel> {
     // 중복 클릭 방지를 위해 상태변경을 한다.
     state = state.copyWith(status: PostWriteStatus.loading);
     // // UI 단에서 loading 상태라면 VoidCallback 값을 null 처리하면 비활성화 버튼으로 변경이 된다.
-    // Map<String, dynamic> response =
-    //     await PostRepository().write(title, content);
-    // if (response['success'] == true) {
-    //   Post createdPost = Post.fromMap(response['response']);
-    //   state = state.copyWith(
-    //     status: PostWriteStatus.success,
-    //     message: "Post Write Success",
-    //     createdPost: createdPost,
-    //   );
-    // } else {
-    //   state = state.copyWith(
-    //     status: PostWriteStatus.failure,
-    //     message: "Post Write Failed : ${response['errorMessage']}",
-    //   );
-    // }
+    Map<String, dynamic> response =
+        await PostRepository().write(title, content);
+    if (response['success'] == true) {
+      Post createdPost = Post.fromMap(response['response']);
+      state = state.copyWith(
+        status: PostWriteStatus.success,
+        message: "Post Write Success",
+        createdPost: createdPost,
+      );
+    } else {
+      state = state.copyWith(
+        status: PostWriteStatus.failure,
+        message: "Post Write Failed : ${response['errorMessage']}",
+      );
+    }
   }
 } // end of notifier
 

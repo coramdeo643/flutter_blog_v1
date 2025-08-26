@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blog/_core/constants/size.dart';
 import 'package:flutter_blog/_core/data/post.dart';
 import 'package:flutter_blog/_core/utils/validator_util.dart';
+import 'package:flutter_blog/providers/global/post/post_list_notifier.dart';
 import 'package:flutter_blog/providers/global/post/post_write_notifier.dart';
 import 'package:flutter_blog/ui/widgets/custom_elavated_button.dart';
 import 'package:flutter_blog/ui/widgets/custom_text_area.dart';
@@ -19,9 +20,36 @@ class PostWriteForm extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 게시글 작성 상태 데이터
     // 상태가 변경될 때 마다 build 메서드 다시 호출되어 UI를 업데이트 처리 한다
-
     final PostWriteModel model = ref.watch(postWriteProivder);
-    final PostWriteNotifier notifier = ref.read(postWriteProivder.notifier);
+    // 복습 정리
+    // 상태를 감시하는 Method
+    // ref.read(provider), ref.watch(provider),
+    // ref.listen(provider, listener) 활용해보자!
+    // 1. build method 내부에서 또는 initState 에서 사용가능
+    // 2. 상태 변화에 따른 사이드 이펙트 처리
+    // 참고 : 주로 Navigator, Dialog, Snackbar 등 일회성 액션이 필요할 때 사용한다
+    ref.listen(
+      postWriteProivder,
+      (previous, next) {
+        if (next.status == PostWriteStatus.success) {
+          // Side Effect 1 : Snackbar success MSG
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Post Write Success!"),
+            backgroundColor: Colors.green.shade100,
+          ));
+          // Side Effect 2 : Post List Refresh(가능한 notifier 끼리 통신의 자제하자)
+          ref.read(postListProvider.notifier).refreshAfterWriter();
+          // Side Eggect 3 : Screen change > Navigator.pop
+          Navigator.pop(context);
+        } else if (next.status == PostWriteStatus.failure) {
+          // Side Effect 1 : Snackbar failure MSG
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Post Write Failed!"),
+            backgroundColor: Colors.red.shade100,
+          ));
+        }
+      },
+    );
 
     return Form(
       key: _formKey,
