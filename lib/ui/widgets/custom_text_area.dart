@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
+// 여러줄 입력하는 TextField
 class CustomTextArea extends StatelessWidget {
   final String hint;
   final TextEditingController controller;
+  final String? Function(String?)? validator; // for validation
 
   const CustomTextArea({
     Key? key,
     required this.hint,
     required this.controller,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -16,7 +19,7 @@ class CustomTextArea extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
         controller: controller,
-        maxLines: 10,
+        maxLines: 10, // Max Lines are 10!!!
         decoration: InputDecoration(
           hintText: "Enter $hint",
           enabledBorder: OutlineInputBorder(
