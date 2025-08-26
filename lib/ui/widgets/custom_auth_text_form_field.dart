@@ -22,6 +22,7 @@ class CustomAuthTextFormField extends StatelessWidget {
         Text(title),
         const SizedBox(height: smallGap),
         TextFormField(
+          //initialValue: "ssar",
           onChanged: onChanged,
           obscureText: obscureText,
           decoration: InputDecoration(

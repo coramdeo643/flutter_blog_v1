@@ -1,6 +1,7 @@
 // 통신 관련해서 -> UI 갱신 로직
 // 통신 요청 -> 로딩 > 성공 / 실패
 
+import 'package:flutter_blog/_core/data/models/repository/post_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -59,9 +60,34 @@ class PostDetailNotifier
   }
 
   /// 게시글 불러오기 기능 추가
-  ///
+  Future<void> loadPostDetail(int postId) async {
+    try {
+      // 1. 게시글 상세보기 요청
+      state = state?.copyWith(isLoading: true, error: null);
+      // 2.
+      Map<String, dynamic> response = await PostRepository().getOne(postId);
+      // 3.
+      if (response['success']) {
+        state = PostDetailModel.fromMap(response['response']);
+      } else {
+        state = state?.copyWith(error: response['errorMessage']);
+      }
+    } catch (e) {}
+  }
+
   /// 게시글 삭제하기 기능 추가
-  ///
+  Future<void> deletePost(int postId) async {
+    // 1. 게시글 삭제 요청
+    state = state?.copyWith(isLoading: true, error: null);
+    Map<String, dynamic> response = await PostRepository().deleteOne(postId);
+    if (response['success']) {
+      state = state?.copyWith(isLoading: false);
+    } else {
+      state =
+          state?.copyWith(isLoading: false, error: response['errorMessage']);
+    }
+  }
+
   /// 게시글 수정은 화면 이동해서 처리
   ///
 }
