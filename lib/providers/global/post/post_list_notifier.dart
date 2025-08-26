@@ -2,6 +2,7 @@
 import 'package:flutter_blog/_core/data/models/repository/post_repository.dart';
 import 'package:flutter_blog/_core/utils/exception_handler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 
 import '../../../_core/data/post.dart';
 
@@ -111,6 +112,14 @@ class PostListNotifier extends Notifier<PostListModel?> {
       return {"success": false};
     }
   }
+
+  // 게시글 목록 새로고침 기능 추가
+  Future<void> refreshAfterWriter() async {
+    Logger().d("게시글 작성 후 목록 새로고침 시작");
+    await fetchPosts(page: 0);
+  }
+
+  //
 }
 
 final postListProvider = NotifierProvider<PostListNotifier, PostListModel?>(

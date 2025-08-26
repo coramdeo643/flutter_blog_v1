@@ -26,6 +26,7 @@ class CustomTextFormField extends StatelessWidget {
       controller.text = initValue!;
     }
     return TextFormField(
+      validator: validator,
       controller: controller,
       obscureText: obscureText,
       decoration: InputDecoration(

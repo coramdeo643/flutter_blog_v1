@@ -19,7 +19,7 @@ class CustomTextArea extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
         controller: controller,
-        maxLines: 10, // Max Lines are 10!!!
+        maxLines: 15, // Able to input multiple lines
         decoration: InputDecoration(
           hintText: "Enter $hint",
           enabledBorder: OutlineInputBorder(
