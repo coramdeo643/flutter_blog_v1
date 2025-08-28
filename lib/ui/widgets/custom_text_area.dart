@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // 여러줄 입력하는 TextField
 class CustomTextArea extends StatelessWidget {
+  final String? initValue; // 초기값
   final String hint;
   final TextEditingController controller;
   final String? Function(String?)? validator; // for validation
@@ -11,10 +12,15 @@ class CustomTextArea extends StatelessWidget {
     required this.hint,
     required this.controller,
     this.validator,
+    this.initValue = "",
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (initValue != null && initValue!.isNotEmpty) {
+      controller.text = initValue!;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(

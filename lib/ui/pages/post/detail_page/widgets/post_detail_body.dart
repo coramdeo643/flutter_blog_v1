@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/_core/constants/size.dart';
+import 'package:flutter_blog/_core/utils/permission_util.dart';
 import 'package:flutter_blog/providers/global/post/post_detail_notifier.dart';
 import 'package:flutter_blog/ui/pages/post/detail_page/widgets/post_detail_buttons.dart';
 import 'package:flutter_blog/ui/pages/post/detail_page/widgets/post_detail_content.dart';
@@ -61,18 +62,27 @@ class _PostDetailBodyState extends ConsumerState<PostDetailBody> {
     }
     // 3. 정상 통신
     return RefreshIndicator(
-      child: ListView(
-        children: [
-          PostDetailTitle(model.post.title),
-          const SizedBox(height: largeGap),
-          PostDetailProfile(model.post),
-          const SizedBox(height: largeGap),
-          PostDetailContent(model.post.content),
-          const SizedBox(height: largeGap),
-          PostDetailButtons(model.post),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            PostDetailTitle(model.post.title),
+            const SizedBox(height: largeGap),
+            PostDetailProfile(model.post),
+            // Authorization check to delete post
+            PostDetailButtons(model.post),
+            Divider(),
+            const SizedBox(height: largeGap),
+            PostDetailContent(model.post.content),
+            const SizedBox(height: largeGap),
+          ],
+        ),
       ),
-      onRefresh: () async {},
+      onRefresh: () async {
+        await ref
+            .read(postDetailProvider(widget.postId).notifier)
+            .refresh(widget.postId);
+      },
     );
   }
 }

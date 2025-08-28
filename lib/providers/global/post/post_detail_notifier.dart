@@ -76,16 +76,23 @@ class PostDetailNotifier
   }
 
   /// 게시글 삭제하기 기능 추가
-  Future<void> deletePost(int postId) async {
+  Future<Map<String, dynamic>> deletePost(int postId) async {
     // 1. 게시글 삭제 요청
     state = state?.copyWith(isLoading: true, error: null);
     Map<String, dynamic> response = await PostRepository().deleteOne(postId);
     if (response['success']) {
       state = state?.copyWith(isLoading: false);
+      return {"success": true};
     } else {
       state =
           state?.copyWith(isLoading: false, error: response['errorMessage']);
+      return {"success": false, "errorMessage": response["errorMessage"]};
     }
+  }
+
+  /// 게시글 새로고침
+  Future<void> refresh(int postId) async {
+    await loadPostDetail(postId);
   }
 
   /// 게시글 수정은 화면 이동해서 처리
