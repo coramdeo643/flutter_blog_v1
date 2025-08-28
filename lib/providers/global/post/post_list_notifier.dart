@@ -114,6 +114,7 @@ class PostListNotifier extends Notifier<PostListModel?> {
   }
 
   // 게시글 목록 새로고침 기능 추가
+  //TODO Refactoring!!!
   Future<void> refreshAfterWriter() async {
     Logger().d("게시글 작성 후 목록 새로고침 시작");
     await fetchPosts(page: 0);
