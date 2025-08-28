@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/main.dart';
 import 'package:flutter_blog/providers/form/login_form_notifier.dart';
+import 'package:flutter_blog/providers/global/session_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
@@ -17,15 +18,10 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   }
 
   void _performAutoLogin() async {
-    // stay 2 seconds
     await Future.delayed(Duration(seconds: 2));
-    // Go to Login
-    //Navigator.pushNamed(context, "/login");
-
     try {
-      // if already logined, go to post list page
-      // else go to login page
-      if (ref.read(loginFormProvider.notifier).validate()) {
+      final isLogined = await ref.read(sessionProvider.notifier).autoLogin();
+      if (isLogined) {
         Navigator.pushNamed(context, "/post/list");
       } else {
         Navigator.pushNamed(context, "/login");
@@ -33,9 +29,6 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     } catch (e) {
       Navigator.pushNamed(context, "/login");
     }
-    // Auto login Request
-    // 결과에 따라서 로그인 페이지 게시글 목록 페이지 분기 처리
-    // 혹시 오류 발생하면 그냥 로그인 페이지로...
   }
 
   @override

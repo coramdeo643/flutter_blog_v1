@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // 여러줄 입력하는 TextField
-class CustomTextArea extends StatelessWidget {
+class CustomTextArea extends StatefulWidget {
   final String? initValue; // 초기값
   final String hint;
   final TextEditingController controller;
@@ -16,18 +16,33 @@ class CustomTextArea extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    if (initValue != null && initValue!.isNotEmpty) {
-      controller.text = initValue!;
-    }
+  State<CustomTextArea> createState() => _CustomTextAreaState();
+}
 
+class _CustomTextAreaState extends State<CustomTextArea> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initValue != null && widget.initValue!.isNotEmpty) {
+      widget.controller.text = widget.initValue!;
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
-        controller: controller,
+        controller: widget.controller,
         maxLines: 15, // Able to input multiple lines
         decoration: InputDecoration(
-          hintText: "Enter $hint",
+          hintText: "Enter ${widget.hint}",
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
           ),
