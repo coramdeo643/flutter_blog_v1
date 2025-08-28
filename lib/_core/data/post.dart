@@ -37,6 +37,26 @@ class Post {
         //  replies = data['replies'],
         isBookmark = data['isBookmark'];
 
+  Post copyWith({
+    int? id,
+    String? title,
+    String? content,
+    DateTime? updatedAt,
+    DateTime? createdAt,
+    int? bookmarkCount,
+    User? user,
+  }) {
+    return Post(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      bookmarkCount: bookmarkCount ?? this.bookmarkCount,
+      user: user ?? this.user,
+    );
+  }
+
   @override
   String toString() {
     return 'Post{id: $id, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, '

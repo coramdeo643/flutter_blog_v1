@@ -21,13 +21,13 @@ class LoginModel {
     this.passwordError,
   );
 
-  void main() {
-    LoginModel loginModel1 =
-        LoginModel("Lee", "1234", "3 letters", "4 letters");
-    LoginModel loginModel2 =
-        LoginModel("Lee", "1234", "3 letters", "4 letters");
-    loginModel1.copyWith(usernameError: "5 letters");
-  }
+  // void main() {
+  //   LoginModel loginModel1 =
+  //       LoginModel("Lee", "1234", "3 letters", "4 letters");
+  //   LoginModel loginModel2 =
+  //       LoginModel("Lee", "1234", "3 letters", "4 letters");
+  //   loginModel1.copyWith(usernameError: "5 letters");
+  // }
 
   // 기존 데이터에서 일부 변경한 값만 받아서 새로운 객체 만드는 코드 작성
   LoginModel copyWith({
@@ -52,7 +52,7 @@ class LoginModel {
 } // end of LoginModel class
 
 // 창고 메뉴얼 설계
-class LoginFormNotifier extends Notifier<LoginModel> {
+class LoginFormNotifier extends AutoDisposeNotifier<LoginModel> {
   @override
   LoginModel build() {
     return LoginModel("", "", "", "");
@@ -96,7 +96,8 @@ class LoginFormNotifier extends Notifier<LoginModel> {
 
 // 실제 창고를 메모리에 올린다 - 전역 변수로 관리
 final loginFormProvider =
-    NotifierProvider<LoginFormNotifier, LoginModel>(() => LoginFormNotifier());
+    AutoDisposeNotifierProvider<LoginFormNotifier, LoginModel>(
+        () => LoginFormNotifier());
 // loginFormProvider --> LoginFormNotifier() --> LoginModel()
 // ref.read(loginFormProvider);    --> LoginModel()
 // ref.read(loginFormProvider.notifier); --> LoginFormNotifier()
